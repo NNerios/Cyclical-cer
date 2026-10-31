@@ -1,0 +1,58 @@
+# =====================================================================
+# CORE ENGINE: CER-C QUANTUM DECAY & VACUUM POLARIZATION SPRING
+# =====================================================================
+import math
+
+def calculate_quantum_decay_w(density, rho_max, decay_constant=0.1, w_initial=-1.0):
+    """
+    TRACKS FORMULA 1: The w Vacuum-to-Matter Decay Equation.
+    Models the microscopic quantum decoherence of vacuum fluctuations.
+    As density drops, virtual vacuum energy decays exponentially into matter.
+    """
+    if rho_max <= 0:
+        return w_initial
+        
+    density_ratio = density / rho_max
+    
+    # Quantum decay mechanism: exponential transition profile
+    # At max compaction (ratio=1), decay is suppressed, w -> -1 (Pure Vacuum)
+    # As universe expands (ratio -> 0), vacuum fluctuations decay, w -> 0 (Dust/Matter)
+    decay_profile = math.exp(-decay_constant * (1.0 - density_ratio))
+    w_dynamic = w_initial * density_ratio * decay_profile
+    
+    # Restrict mathematically within strict physical boundaries
+    return max(min(w_dynamic, 0.0), -1.0)
+
+def calculate_repulsive_pressure_AE(density, rho_max, polarization_power=2.0):
+    """
+    TRACKS FORMULA 2: The AE Quantum Repulsive Pressure Formula.
+    Models the collective repulsion of squeezed vacuum polarization states.
+    Spikes aggressively as particles approach their Compton wavelength limit.
+    """
+    if rho_max <= 0 or density <= 0:
+        return 0.0
+        
+    # Scale via a localized power-law framework
+    # A standard value of 2.0 creates a clean quadratic quantum spring
+    bounce_factor = (density / rho_max) ** polarization_power
+    
+    # Strict threshold boundary: fully saturates at 1.0 at the turn-around point
+    return min(bounce_factor, 1.0)
+
+def calculate_h_squared(density, rho_max, G_eff=1.0, decay_constant=0.1):
+    """
+    COMBINED ENGINE MASTER LOGIC:
+    Fuses the decay variable and the pressure modifier into a unified state.
+    """
+    # 1. Fetch values from both microscopic inputs simultaneously
+    w_val = calculate_quantum_decay_w(density, rho_max, decay_constant)
+    AE_val = calculate_repulsive_pressure_AE(density, rho_max)
+    
+    # 2. Compute classic macroscopic gravitational density baseline
+    macro_expansion = G_eff * density
+    
+    # 3. Inject the microscopic quantum spring modifier
+    # When AE_val hits 1.0 at maximum compaction, the system drives H^2 to 0
+    h_squared_net = macro_expansion * (1.0 - AE_val)
+    
+    return max(0.0, h_squared_net)
